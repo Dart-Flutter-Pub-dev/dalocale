@@ -1,3 +1,3 @@
 ## Example
 
-Example available in the main [README](example/README.md).
+Example available in the main [README](../README.md).
