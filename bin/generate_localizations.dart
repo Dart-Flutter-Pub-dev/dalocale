@@ -188,10 +188,30 @@ class LocalizationEntry {
 
   String _line(String value) {
     if (params.isEmpty) {
-      return "  final String $key = '$value';\n";
+      return "  final String ${_sanitizeKey(key)} = '$value';\n";
     } else {
-      return "  String $key(${_parameterList(params)}) => '$value';\n";
+      return "  String ${_sanitizeKey(key)}(${_parameterList(params)}) => '$value';\n";
     }
+  }
+
+  String _sanitizeKey(String value) {
+    String result = '';
+    bool shouldCapitalize = false;
+
+    for (int i = 0; i < value.length; i++) {
+      var char = value[i];
+
+      if (char == '.') {
+        shouldCapitalize = true;
+      } else if (shouldCapitalize) {
+        result += char.toUpperCase();
+        shouldCapitalize = false;
+      } else {
+        result += char;
+      }
+    }
+
+    return result;
   }
 
   String _parameterList(List<String> parameters) {

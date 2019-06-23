@@ -3,17 +3,17 @@ import 'package:flutter/widgets.dart';
 
 class BaseLocalized {
   final String greetings = '';
-  String welcome_back(String name) => '';
+  String welcomeBack(String name) => '';
 }
 
 class ENLocalized extends BaseLocalized {
   final String greetings = 'Hello, world!';
-  String welcome_back(String name) => 'Welcome back: $name';
+  String welcomeBack(String name) => 'Welcome back: $name';
 }
 
 class ESLocalized extends BaseLocalized {
   final String greetings = 'Hola, mundo!';
-  String welcome_back(String name) => 'Bienvenido: $name';
+  String welcomeBack(String name) => 'Bienvenido: $name';
 }
 
 class Localized {
