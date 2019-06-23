@@ -41,13 +41,13 @@ In the previous example, the key `welcome.back` contains a value with a paramete
 To generate the Dart file containing all the localizations, run the following command:
 
 ```bash
-flutter pub pub run dalocale:generate_localizations.dart INPUT_FOLDER OUTPUT_FILE
+flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE
 ```
 
 For example:
 
 ```bash
-flutter pub pub run dalocale:generate_localizations.dart ./assets/i18n/ ./lib/foo/bar/localizations.dart
+flutter pub pub run dalocale:dalocale.dart ./assets/i18n/ ./lib/foo/bar/localizations.dart
 ```
 
 ### Using generated code

@@ -1,5 +1,5 @@
 #!/usr/bin/env dart
-library generate_localizations;
+library dalocale;
 
 import 'dart:convert';
 import 'dart:io';
