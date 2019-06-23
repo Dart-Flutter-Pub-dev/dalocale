@@ -1,0 +1,4 @@
+{
+    "greetings": "Hello, world!",
+    "welcome.back": "Welcome back: ${name}"
+}
