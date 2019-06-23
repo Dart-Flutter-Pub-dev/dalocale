@@ -2,6 +2,19 @@
 
 A Flutter package to easily support internationalization and localization in your project.
 
+## Installation
+
+Add the following dependencies to your `pubspec.yaml`:
+
+```yaml
+dependencies: 
+  flutter_localizations: 
+  sdk: flutter 
+
+dev_dependencies:
+  dalocale: ^1.2.1
+```
+
 ## Example
 
 ### Creating localization files
