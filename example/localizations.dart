@@ -14,7 +14,7 @@ class ENLocalized extends BaseLocalized {
   String get greetings => 'Hello, world!';
 
   @override
-  String welcomeBack(Object name) => 'Welcome back: ${name.toString()}';
+  String welcomeBack(Object name) => 'Welcome back: \'${name.toString()}\'';
 }
 
 class ESLocalized extends BaseLocalized {
