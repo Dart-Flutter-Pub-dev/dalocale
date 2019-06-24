@@ -135,7 +135,7 @@ class LocalizationGroup {
   }
 
   String base() {
-    String result = 'class BaseLocalized {\n';
+    String result = 'abstract class BaseLocalized {\n';
 
     for (var entry in entries) {
       result += entry.lineBase();
@@ -179,16 +179,23 @@ class LocalizationEntry {
   }
 
   String lineConcrete() {
-    return _line(value);
+    String result = "\n  @override\n";
+    result += _line(value);
+
+    return result;
   }
 
   String lineBase() {
-    return _line('');
+    if (params.isEmpty) {
+      return "\n  String get ${_sanitizeKey(key)};\n";
+    } else {
+      return "\n  String ${_sanitizeKey(key)}(${_parameterList(params)});\n";
+    }
   }
 
   String _line(String value) {
     if (params.isEmpty) {
-      return "  final String ${_sanitizeKey(key)} = '$value';\n";
+      return "  String get ${_sanitizeKey(key)} => '$value';\n";
     } else {
       return "  String ${_sanitizeKey(key)}(${_parameterList(params)}) => '$value';\n";
     }

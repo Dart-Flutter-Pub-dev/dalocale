@@ -1,18 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class BaseLocalized {
-  final String greetings = '';
-  String welcomeBack(String name) => '';
+abstract class BaseLocalized {
+
+  String get greetings;
+
+  String welcomeBack(String name);
 }
 
 class ENLocalized extends BaseLocalized {
-  final String greetings = 'Hello, world!';
+
+  @override
+  String get greetings => 'Hello, world!';
+
+  @override
   String welcomeBack(String name) => 'Welcome back: $name';
 }
 
 class ESLocalized extends BaseLocalized {
-  final String greetings = 'Hola, mundo!';
+
+  @override
+  String get greetings => 'Hola, mundo!';
+
+  @override
   String welcomeBack(String name) => 'Bienvenido: $name';
 }
 
