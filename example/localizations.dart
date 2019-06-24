@@ -5,7 +5,7 @@ abstract class BaseLocalized {
 
   String get greetings;
 
-  String welcomeBack(String name);
+  String welcomeBack(Object name);
 }
 
 class ENLocalized extends BaseLocalized {
@@ -14,7 +14,7 @@ class ENLocalized extends BaseLocalized {
   String get greetings => 'Hello, world!';
 
   @override
-  String welcomeBack(String name) => 'Welcome back: $name';
+  String welcomeBack(Object name) => 'Welcome back: ${name.toString()}';
 }
 
 class ESLocalized extends BaseLocalized {
@@ -23,7 +23,7 @@ class ESLocalized extends BaseLocalized {
   String get greetings => 'Hola, mundo!';
 
   @override
-  String welcomeBack(String name) => 'Bienvenido: $name';
+  String welcomeBack(Object name) => 'Bienvenido: ${name.toString()}';
 }
 
 class Localized {

@@ -172,7 +172,7 @@ class LocalizationEntry {
         exp.allMatches(value).toList().map((r) => r.group(1)).toList();
 
     for (var param in params) {
-      value = value.replaceFirst('\$\{$param\}', '\$$param');
+      value = value.replaceFirst('\$\{$param\}', '\$\{$param.toString()\}');
     }
 
     return LocalizationEntry(key, value, params);
@@ -227,7 +227,7 @@ class LocalizationEntry {
     for (var parameter in parameters) {
       result += result.isEmpty ? '' : ', ';
 
-      result += 'String $parameter';
+      result += 'Object $parameter';
     }
 
     return result;
