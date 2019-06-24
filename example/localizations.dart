@@ -14,7 +14,7 @@ class ENLocalized extends BaseLocalized {
   String get greetings => 'Hello, world!';
 
   @override
-  String welcomeBack(Object name) => 'Welcome back: \'${name.toString()}\'';
+  String welcomeBack(Object name) => 'Welcome back: \'${name.toString()}zo\'';
 }
 
 class ESLocalized extends BaseLocalized {
@@ -23,7 +23,7 @@ class ESLocalized extends BaseLocalized {
   String get greetings => 'Hola, mundo!';
 
   @override
-  String welcomeBack(Object name) => 'Bienvenido: ${name.toString()}';
+  String welcomeBack(Object name) => 'Bienvenido: \'${name.toString()}ito\'';
 }
 
 class Localized {

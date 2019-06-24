@@ -1,4 +1,4 @@
 {
     "greetings": "Hola, mundo!",
-    "welcome.back": "Bienvenido: ${name}"
+    "welcome.back": "Bienvenido: '${name}ito'"
 }
