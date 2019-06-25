@@ -9,3 +9,7 @@
 ## [1.3.0] - 2019-06-24
 
 * Improved generator script
+
+## [1.3.1] - 2019-06-25
+
+* Fixed bug escaping single quotes

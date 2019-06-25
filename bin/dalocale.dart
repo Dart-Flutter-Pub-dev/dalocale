@@ -173,8 +173,9 @@ class LocalizationEntry {
 
     for (var param in params) {
       value = value.replaceFirst('\$\{$param\}', '\$\{$param.toString()\}');
-      value = value.replaceAll("'", "\\'");
     }
+
+    value = value.replaceAll("'", "\\'");
 
     return LocalizationEntry(key, value, params);
   }
