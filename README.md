@@ -9,10 +9,10 @@ Add the following dependencies to your `pubspec.yaml`:
 ```yaml
 dependencies: 
   flutter_localizations: 
-  sdk: flutter 
+    sdk: flutter 
 
 dev_dependencies:
-  dalocale: ^1.3.0
+  dalocale: ^1.3.2
 ```
 
 ## Example

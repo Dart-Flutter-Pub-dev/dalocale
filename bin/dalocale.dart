@@ -5,20 +5,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart';
 
-main(List<String> args) async {
-  var input = args[0];
-  var output = args[1];
+Future main(List<String> args) async {
+  final input = args[0];
+  final output = args[1];
 
-  var jsonFiles = getJsonFiles(input);
-  var groups = await getGroups(jsonFiles);
+  final jsonFiles = getJsonFiles(input);
+  final groups = await getGroups(jsonFiles);
 
   generateFile(output, groups);
 }
 
 List<File> getJsonFiles(String root) {
-  var folder = Directory(root);
-  var contents = folder.listSync(recursive: false, followLinks: false);
-  List<File> result = [];
+  final folder = Directory(root);
+  final contents = folder.listSync(recursive: false, followLinks: false);
+  final List<File> result = [];
 
   for (var fileOrDir in contents) {
     if (fileOrDir is File) {
@@ -30,12 +30,12 @@ List<File> getJsonFiles(String root) {
 }
 
 Future<List<LocalizationGroup>> getGroups(List<File> files) async {
-  List<LocalizationGroup> groups = [];
+  final List<LocalizationGroup> groups = [];
 
   for (var file in files) {
-    String filename = basename(file.path);
-    var parts = filename.split('.');
-    var entries = await getEntries(file);
+    final filename = basename(file.path);
+    final parts = filename.split('.');
+    final entries = await getEntries(file);
 
     groups.add(LocalizationGroup(parts[0].toLowerCase(), entries));
   }
@@ -44,9 +44,9 @@ Future<List<LocalizationGroup>> getGroups(List<File> files) async {
 }
 
 Future<List<LocalizationEntry>> getEntries(File file) async {
-  var content = await file.readAsString();
-  Map<String, dynamic> json = jsonDecode(content);
-  List<LocalizationEntry> entries = [];
+  final content = await file.readAsString();
+  final Map<String, dynamic> json = jsonDecode(content);
+  final List<LocalizationEntry> entries = [];
 
   for (var entry in json.keys) {
     entries.add(LocalizationEntry.create(entry, json[entry]));
@@ -55,8 +55,8 @@ Future<List<LocalizationEntry>> getEntries(File file) async {
   return entries;
 }
 
-void generateFile(String output, List<LocalizationGroup> groups) async {
-  var file = SourceFile(output);
+Future generateFile(String output, List<LocalizationGroup> groups) async {
+  final file = SourceFile(output);
   file.clear();
 
   // imports
@@ -82,7 +82,7 @@ void generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('  static Map<String, BaseLocalized> localized = {\n');
 
   for (var i = 0; i < groups.length; i++) {
-    var group = groups[i];
+    final group = groups[i];
     file.write('    ${group.mapEntry()}');
 
     if (i < (groups.length - 1)) {
@@ -167,8 +167,8 @@ class LocalizationEntry {
   LocalizationEntry(this.key, this.value, [this.params = const []]);
 
   static LocalizationEntry create(String key, String value) {
-    RegExp exp = new RegExp(r"\$\{([^\}]+)\}");
-    List<String> params =
+    final exp = RegExp(r'\$\{([^\}]+)\}');
+    final params =
         exp.allMatches(value).toList().map((r) => r.group(1)).toList();
 
     for (var param in params) {
@@ -181,7 +181,7 @@ class LocalizationEntry {
   }
 
   String lineConcrete() {
-    String result = "\n  @override\n";
+    String result = '\n  @override\n';
     result += _line(value);
 
     return result;
@@ -189,9 +189,9 @@ class LocalizationEntry {
 
   String lineBase() {
     if (params.isEmpty) {
-      return "\n  String get ${_sanitizeKey(key)};\n";
+      return '\n  String get ${_sanitizeKey(key)};\n';
     } else {
-      return "\n  String ${_sanitizeKey(key)}(${_parameterList(params)});\n";
+      return '\n  String ${_sanitizeKey(key)}(${_parameterList(params)});\n';
     }
   }
 
@@ -208,7 +208,7 @@ class LocalizationEntry {
     bool shouldCapitalize = false;
 
     for (int i = 0; i < value.length; i++) {
-      var char = value[i];
+      final char = value[i];
 
       if (char == '.') {
         shouldCapitalize = true;

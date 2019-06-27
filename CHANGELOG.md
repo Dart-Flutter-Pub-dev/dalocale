@@ -13,3 +13,7 @@
 ## [1.3.1] - 2019-06-25
 
 * Fixed bug escaping single quotes
+
+## [1.3.2] - 2019-06-27
+
+* Added lint rules
