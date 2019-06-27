@@ -78,9 +78,10 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('  static BaseLocalized get;\n');
   file.write('\n');
   file.write(
-      '  static List<Locale> locales = localized.keys.map((l) => Locale(l)).toList();\n');
+      '  static List<Locale> locales = localized.keys.map((String l) => Locale(l)).toList();\n');
   file.write('\n');
-  file.write('  static Map<String, BaseLocalized> localized = {\n');
+  file.write(
+      '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n');
 
   for (int i = 0; i < groups.length; i++) {
     final LocalizationGroup group = groups[i];
@@ -101,18 +102,18 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
 
   // delegate
   file.write(
-      '\nclass CustomLocalizationsDelegate extends LocalizationsDelegate {\n');
+      '\nclass CustomLocalizationsDelegate extends LocalizationsDelegate<dynamic> {\n');
   file.write('  const CustomLocalizationsDelegate();\n');
   file.write('\n');
   file.write('  @override\n');
   file.write('  bool isSupported(Locale locale) => Localized.locales\n');
-  file.write('      .map((l) => l.languageCode)\n');
+  file.write('      .map((Locale l) => l.languageCode)\n');
   file.write('      .contains(locale.languageCode);\n');
   file.write('\n');
   file.write('  @override\n');
-  file.write('  Future load(Locale locale) {\n');
+  file.write('  Future<dynamic> load(Locale locale) {\n');
   file.write('    Localized.load(locale);\n');
-  file.write('    return SynchronousFuture(Object());\n');
+  file.write('    return SynchronousFuture<dynamic>(Object());\n');
   file.write('  }\n');
   file.write('\n');
   file.write('  @override\n');

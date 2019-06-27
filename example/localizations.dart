@@ -2,12 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class BaseLocalized {
+
   String get greetings;
 
   String welcomeBack(Object name);
 }
 
 class ENLocalized extends BaseLocalized {
+
   @override
   String get greetings => 'Hello, world!';
 
@@ -16,6 +18,7 @@ class ENLocalized extends BaseLocalized {
 }
 
 class ESLocalized extends BaseLocalized {
+
   @override
   String get greetings => 'Hola, mundo!';
 
@@ -26,8 +29,7 @@ class ESLocalized extends BaseLocalized {
 class Localized {
   static BaseLocalized get;
 
-  static List<Locale> locales =
-      localized.keys.map((String l) => Locale(l)).toList();
+  static List<Locale> locales = localized.keys.map((String l) => Locale(l)).toList();
 
   static Map<String, BaseLocalized> localized = <String, BaseLocalized>{
     'en': ENLocalized(),
