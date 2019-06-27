@@ -5,22 +5,23 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart';
 
-Future main(List<String> args) async {
-  final input = args[0];
-  final output = args[1];
+Future<void> main(List<String> args) async {
+  final String input = args[0];
+  final String output = args[1];
 
-  final jsonFiles = getJsonFiles(input);
-  final groups = await getGroups(jsonFiles);
+  final List<File> jsonFiles = getJsonFiles(input);
+  final List<LocalizationGroup> groups = await getGroups(jsonFiles);
 
   generateFile(output, groups);
 }
 
 List<File> getJsonFiles(String root) {
-  final folder = Directory(root);
-  final contents = folder.listSync(recursive: false, followLinks: false);
-  final List<File> result = [];
+  final Directory folder = Directory(root);
+  final List<FileSystemEntity> contents =
+      folder.listSync(recursive: false, followLinks: false);
+  final List<File> result = <File>[];
 
-  for (var fileOrDir in contents) {
+  for (FileSystemEntity fileOrDir in contents) {
     if (fileOrDir is File) {
       result.add(File(fileOrDir.path));
     }
@@ -30,12 +31,12 @@ List<File> getJsonFiles(String root) {
 }
 
 Future<List<LocalizationGroup>> getGroups(List<File> files) async {
-  final List<LocalizationGroup> groups = [];
+  final List<LocalizationGroup> groups = <LocalizationGroup>[];
 
-  for (var file in files) {
-    final filename = basename(file.path);
-    final parts = filename.split('.');
-    final entries = await getEntries(file);
+  for (File file in files) {
+    final String filename = basename(file.path);
+    final List<String> parts = filename.split('.');
+    final List<LocalizationEntry> entries = await getEntries(file);
 
     groups.add(LocalizationGroup(parts[0].toLowerCase(), entries));
   }
@@ -44,19 +45,19 @@ Future<List<LocalizationGroup>> getGroups(List<File> files) async {
 }
 
 Future<List<LocalizationEntry>> getEntries(File file) async {
-  final content = await file.readAsString();
+  final String content = await file.readAsString();
   final Map<String, dynamic> json = jsonDecode(content);
-  final List<LocalizationEntry> entries = [];
+  final List<LocalizationEntry> entries = <LocalizationEntry>[];
 
-  for (var entry in json.keys) {
+  for (String entry in json.keys) {
     entries.add(LocalizationEntry.create(entry, json[entry]));
   }
 
   return entries;
 }
 
-Future generateFile(String output, List<LocalizationGroup> groups) async {
-  final file = SourceFile(output);
+Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
+  final SourceFile file = SourceFile(output);
   file.clear();
 
   // imports
@@ -68,7 +69,7 @@ Future generateFile(String output, List<LocalizationGroup> groups) async {
   file.write(groups[0].base());
 
   // concrete
-  for (var group in groups) {
+  for (LocalizationGroup group in groups) {
     file.write('\n${group.concrete()}');
   }
 
@@ -81,8 +82,8 @@ Future generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('\n');
   file.write('  static Map<String, BaseLocalized> localized = {\n');
 
-  for (var i = 0; i < groups.length; i++) {
-    final group = groups[i];
+  for (int i = 0; i < groups.length; i++) {
+    final LocalizationGroup group = groups[i];
     file.write('    ${group.mapEntry()}');
 
     if (i < (groups.length - 1)) {
@@ -137,7 +138,7 @@ class LocalizationGroup {
   String base() {
     String result = 'abstract class BaseLocalized {\n';
 
-    for (var entry in entries) {
+    for (LocalizationEntry entry in entries) {
       result += entry.lineBase();
     }
 
@@ -149,7 +150,7 @@ class LocalizationGroup {
   String concrete() {
     String result = 'class ${name()}Localized extends BaseLocalized {\n';
 
-    for (var entry in entries) {
+    for (LocalizationEntry entry in entries) {
       result += entry.lineConcrete();
     }
 
@@ -164,14 +165,14 @@ class LocalizationEntry {
   final String value;
   final List<String> params;
 
-  LocalizationEntry(this.key, this.value, [this.params = const []]);
+  LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
   static LocalizationEntry create(String key, String value) {
-    final exp = RegExp(r'\$\{([^\}]+)\}');
-    final params =
-        exp.allMatches(value).toList().map((r) => r.group(1)).toList();
+    final RegExp exp = RegExp(r'\$\{([^\}]+)\}');
+    final List<String> params =
+        exp.allMatches(value).toList().map((Match r) => r.group(1)).toList();
 
-    for (var param in params) {
+    for (String param in params) {
       value = value.replaceFirst('\$\{$param\}', '\$\{$param.toString()\}');
     }
 
@@ -208,7 +209,7 @@ class LocalizationEntry {
     bool shouldCapitalize = false;
 
     for (int i = 0; i < value.length; i++) {
-      final char = value[i];
+      final String char = value[i];
 
       if (char == '.') {
         shouldCapitalize = true;
@@ -224,9 +225,9 @@ class LocalizationEntry {
   }
 
   String _parameterList(List<String> parameters) {
-    var result = '';
+    String result = '';
 
-    for (var parameter in parameters) {
+    for (String parameter in parameters) {
       result += result.isEmpty ? '' : ', ';
 
       result += 'Object $parameter';

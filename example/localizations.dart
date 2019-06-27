@@ -2,14 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class BaseLocalized {
-
   String get greetings;
 
   String welcomeBack(Object name);
 }
 
 class ENLocalized extends BaseLocalized {
-
   @override
   String get greetings => 'Hello, world!';
 
@@ -18,7 +16,6 @@ class ENLocalized extends BaseLocalized {
 }
 
 class ESLocalized extends BaseLocalized {
-
   @override
   String get greetings => 'Hola, mundo!';
 
@@ -29,9 +26,10 @@ class ESLocalized extends BaseLocalized {
 class Localized {
   static BaseLocalized get;
 
-  static List<Locale> locales = localized.keys.map((l) => Locale(l)).toList();
+  static List<Locale> locales =
+      localized.keys.map((String l) => Locale(l)).toList();
 
-  static Map<String, BaseLocalized> localized = {
+  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{
     'en': ENLocalized(),
     'es': ESLocalized()
   };
@@ -41,18 +39,18 @@ class Localized {
   }
 }
 
-class CustomLocalizationsDelegate extends LocalizationsDelegate {
+class CustomLocalizationsDelegate extends LocalizationsDelegate<dynamic> {
   const CustomLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => Localized.locales
-      .map((l) => l.languageCode)
+      .map((Locale l) => l.languageCode)
       .contains(locale.languageCode);
 
   @override
-  Future load(Locale locale) {
+  Future<dynamic> load(Locale locale) {
     Localized.load(locale);
-    return SynchronousFuture(Object());
+    return SynchronousFuture<dynamic>(Object());
   }
 
   @override
