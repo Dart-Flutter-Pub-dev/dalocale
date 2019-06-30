@@ -43,7 +43,7 @@ For example:
 ```json
 {
     "greetings": "Hello, world!",
-    "welcome.back": "Welcome back: ${name}"
+    "welcome.back": "Welcome back: %1$s"
 }
 ```
 
@@ -101,6 +101,3 @@ Text(Localized.get.greetings)
 ```dart
 Text(Localized.get.welcomeBack('John'))
 ```
-
-## TODO
-* Change parameters format

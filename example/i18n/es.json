@@ -1,4 +1,7 @@
 {
     "greetings": "Hola, mundo!",
-    "welcome.back": "Bienvenido: '${name}ito'"
+    "welcome.back": "Bienvenido: '%1$s'",
+    "age": "Tienes %1$d años",
+    "totalCost": "El coste total es de: %1$f USD",
+    "appointment": "Su cita es el %1$s a las %2$s"
 }

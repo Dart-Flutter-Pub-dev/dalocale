@@ -4,7 +4,13 @@ import 'package:flutter/widgets.dart';
 abstract class BaseLocalized {
   String get greetings;
 
-  String welcomeBack(Object name);
+  String welcomeBack(String param1);
+
+  String age(int param1);
+
+  String totalCost(double param1);
+
+  String appointment(String param1, String param2);
 }
 
 class ENLocalized extends BaseLocalized {
@@ -12,7 +18,16 @@ class ENLocalized extends BaseLocalized {
   String get greetings => 'Hello, world!';
 
   @override
-  String welcomeBack(Object name) => 'Welcome back: \'${name.toString()}zo\'';
+  String welcomeBack(String param1) => 'Welcome back: \'${param1.toString()}\'';
+
+  @override
+  String age(int param1) => 'You are ${param1.toString()} years old';
+
+  @override
+  String totalCost(double param1) => 'The total cost is: ${param1.toString()} USD';
+
+  @override
+  String appointment(String param1, String param2) => 'Your appointment is on ${param1.toString()} at ${param2.toString()}';
 }
 
 class ESLocalized extends BaseLocalized {
@@ -20,7 +35,16 @@ class ESLocalized extends BaseLocalized {
   String get greetings => 'Hola, mundo!';
 
   @override
-  String welcomeBack(Object name) => 'Bienvenido: \'${name.toString()}ito\'';
+  String welcomeBack(String param1) => 'Bienvenido: \'${param1.toString()}\'';
+
+  @override
+  String age(int param1) => 'Tienes ${param1.toString()} años';
+
+  @override
+  String totalCost(double param1) => 'El coste total es de: ${param1.toString()} USD';
+
+  @override
+  String appointment(String param1, String param2) => 'Su cita es el ${param1.toString()} a las ${param2.toString()}';
 }
 
 class Localized {

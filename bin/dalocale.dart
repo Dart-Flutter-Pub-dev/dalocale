@@ -192,12 +192,13 @@ class LocalizationEntry {
   LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
   static LocalizationEntry create(String key, String value) {
-    final RegExp exp = RegExp(r'\$\{([^\}]+)\}');
+    final RegExp exp = RegExp(r'%[0-9]\$([sdf])');
     final List<String> params =
         exp.allMatches(value).toList().map((Match r) => r.group(1)).toList();
 
-    for (String param in params) {
-      value = value.replaceFirst('\$\{$param\}', '\$\{$param.toString()\}');
+    for (int i = 1; i <= params.length; i++) {
+      final String param = params[i - 1];
+      value = value.replaceFirst('%$i\$$param', '\$\{param$i.toString()\}');
     }
 
     value = value.replaceAll("'", "\\'");
@@ -251,10 +252,21 @@ class LocalizationEntry {
   String _parameterList(List<String> parameters) {
     String result = '';
 
-    for (String parameter in parameters) {
+    for (int i = 1; i <= parameters.length; i++) {
+      final String parameter = parameters[i - 1];
       result += result.isEmpty ? '' : ', ';
 
-      result += 'Object $parameter';
+      if (parameter == 's') {
+        result += 'String';
+      } else if (parameter == 'd') {
+        result += 'int';
+      } else if (parameter == 'f') {
+        result += 'double';
+      } else {
+        result += 'Object';
+      }
+
+      result += ' param$i';
     }
 
     return result;
