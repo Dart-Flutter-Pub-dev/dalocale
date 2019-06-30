@@ -8,14 +8,15 @@ import 'package:path/path.dart';
 Future<void> main(List<String> args) async {
   final String input = args[0];
   final String output = args[1];
+  final String defaultLocale = (args.length > 2) ? args[2] : '';
 
-  final List<File> jsonFiles = getJsonFiles(input);
+  final List<File> jsonFiles = getJsonFiles(input, defaultLocale);
   final List<LocalizationGroup> groups = await getGroups(jsonFiles);
 
   generateFile(output, groups);
 }
 
-List<File> getJsonFiles(String root) {
+List<File> getJsonFiles(String root, String defaultLocale) {
   final Directory folder = Directory(root);
   final List<FileSystemEntity> contents =
       folder.listSync(recursive: false, followLinks: false);
@@ -25,6 +26,25 @@ List<File> getJsonFiles(String root) {
     if (fileOrDir is File) {
       result.add(File(fileOrDir.path));
     }
+  }
+
+  if (defaultLocale.isNotEmpty) {
+    final File defaultFile = result.firstWhere(
+        (File f) => basename(f.path) == '$defaultLocale.json',
+        orElse: () => null);
+
+    if (defaultFile == null) {
+      throw Exception(
+          'Default locale "$defaultLocale" not found in input files');
+    }
+
+    final List<File> rest = result
+        .where((File f) => basename(f.path) != '$defaultLocale.json')
+        .toList();
+
+    result.clear();
+    result.add(defaultFile);
+    result.addAll(rest);
   }
 
   return result;
@@ -77,8 +97,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('\nclass Localized {\n');
   file.write('  static BaseLocalized get;\n');
   file.write('\n');
-  file.write(
-      '  static List<Locale> locales = localized.keys.map((String l) => Locale(l)).toList();\n');
+  file.write('  static List<Locale> locales =\n');
+  file.write('      localized.keys.map((String l) => Locale(l)).toList();\n');
   file.write('\n');
   file.write(
       '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n');
@@ -95,6 +115,10 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   }
   file.write('  };\n');
   file.write('\n');
+  file.write('  static bool isSupported(Locale locale) =>\n');
+  file.write(
+      '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
+  file.write('\n');
   file.write('  static void load(Locale locale) {\n');
   file.write('    get = localized[locale.languageCode];\n');
   file.write('  }\n');
@@ -106,9 +130,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('  const CustomLocalizationsDelegate();\n');
   file.write('\n');
   file.write('  @override\n');
-  file.write('  bool isSupported(Locale locale) => Localized.locales\n');
-  file.write('      .map((Locale l) => l.languageCode)\n');
-  file.write('      .contains(locale.languageCode);\n');
+  file.write(
+      '  bool isSupported(Locale locale) => Localized.isSupported(locale);\n');
   file.write('\n');
   file.write('  @override\n');
   file.write('  Future<dynamic> load(Locale locale) {\n');
@@ -137,7 +160,7 @@ class LocalizationGroup {
   }
 
   String base() {
-    String result = 'abstract class BaseLocalized {\n';
+    String result = 'abstract class BaseLocalized {';
 
     for (LocalizationEntry entry in entries) {
       result += entry.lineBase();
@@ -149,7 +172,7 @@ class LocalizationGroup {
   }
 
   String concrete() {
-    String result = 'class ${name()}Localized extends BaseLocalized {\n';
+    String result = 'class ${name()}Localized extends BaseLocalized {';
 
     for (LocalizationEntry entry in entries) {
       result += entry.lineConcrete();

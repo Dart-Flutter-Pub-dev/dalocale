@@ -54,13 +54,13 @@ In the previous example, the key `welcome.back` contains a value with a paramete
 To generate the Dart file containing all the localizations, run the following command:
 
 ```bash
-flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE
+flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE [DEFAULT_LOCALE]
 ```
 
 For example:
 
 ```bash
-flutter pub pub run dalocale:dalocale.dart ./assets/i18n/ ./lib/foo/bar/localizations.dart
+flutter pub pub run dalocale:dalocale.dart ./assets/i18n/ ./lib/foo/bar/localizations.dart en
 ```
 
 ### Using generated code
@@ -81,8 +81,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: ...,
-      localizationsDelegates: [
-        const CustomLocalizationsDelegate(),
+      localizationsDelegates: const [
+        CustomLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -101,3 +101,8 @@ Text(Localized.get.greetings)
 ```dart
 Text(Localized.get.welcomeBack('John'))
 ```
+
+## TODO
+* Define default language
+* Change parameters format
+* Fill with empty strings the missing keys
