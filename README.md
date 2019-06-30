@@ -49,6 +49,13 @@ For example:
 
 In the previous example, the key `welcome.back` contains a value with a parameter.
 
+### Parameters
+
+Parameters inside of localized text must be declared `as %index$format`, where:
+
+index: the position of the parameter in the text (starting from 1)
+format: the format of the parameter (e.g. `s`, `d`, `f`, etc.)
+
 ### Generating Dart code
 
 To generate the Dart file containing all the localizations, run the following command:

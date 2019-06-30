@@ -17,3 +17,7 @@
 ## [1.4.0] - 2019-06-27
 
 * Added lint rules
+
+## [1.5.0] - 2019-06-30
+
+* Changed parameter system
