@@ -1,6 +1,6 @@
 # Dalocale
 
-A Flutter package to easily support internationalization and localization in your project.
+A **Flutter** package to easily support internationalization and localization in your project.
 
 ## Installation
 
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter 
 
 dev_dependencies:
-  dalocale: ^1.4.0
+  dalocale: ^1.5.0
 ```
 
 ## Example
@@ -37,7 +37,7 @@ Each localization file must contain a single **json** object with all the keys a
 }
 ```
 
-`Each key must start with a letter.`
+**Each key must start with a letter.**
 
 For example:
 ```json
@@ -51,14 +51,14 @@ In the previous example, the key `welcome.back` contains a value with a paramete
 
 ### Parameters
 
-Parameters inside of localized text must be declared `as %index$format`, where:
+Parameters inside of localized text must be declared as `%index$format`, where:
 
-index: the position of the parameter in the text (starting from 1)
-format: the format of the parameter (e.g. `s`, `d`, `f`, etc.)
+* **index**: the position of the parameter in the text (starting from 1)
+* **format**: the format of the parameter (e.g. `s`, `d`, `f`, etc.)
 
 ### Generating Dart code
 
-To generate the Dart file containing all the localizations, run the following command:
+To generate the **Dart** file containing all the localizations, run the following command:
 
 ```bash
 flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE [DEFAULT_LOCALE]
