@@ -28,16 +28,8 @@ Create a folder to store all the localizations in **json** format. The name of e
       └─ es.json
 ```
 
-Each localization file must contain a single **json** object with all the keys and values:
+Each localization file must contain a single **json** object with all the keys and values. For example:
 
-```json
-{
-    "key": "Value",
-    "another.key": "Another value"
-}
-```
-
-For example:
 ```json
 {
     "greetings": "Hello, world!",
