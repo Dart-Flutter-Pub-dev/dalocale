@@ -103,6 +103,4 @@ Text(Localized.get.welcomeBack('John'))
 ```
 
 ## TODO
-* Define default language
 * Change parameters format
-* Fill with empty strings the missing keys

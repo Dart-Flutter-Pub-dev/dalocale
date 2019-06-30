@@ -142,7 +142,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('  @override\n');
   file.write(
       '  bool shouldReload(CustomLocalizationsDelegate old) => false;\n');
-  file.write('}');
+  file.write('}\n');
 }
 
 class LocalizationGroup {
