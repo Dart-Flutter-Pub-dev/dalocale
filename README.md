@@ -37,8 +37,6 @@ Each localization file must contain a single **json** object with all the keys a
 }
 ```
 
-**Each key must start with a letter.**
-
 For example:
 ```json
 {
