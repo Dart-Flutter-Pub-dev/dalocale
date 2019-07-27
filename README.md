@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter 
 
 dev_dependencies:
-  dalocale: ^1.5.0
+  dalocale: ^1.6.0
 ```
 
 ## Example
@@ -97,4 +97,10 @@ Text(Localized.get.greetings)
 
 ```dart
 Text(Localized.get.welcomeBack('John'))
+```
+
+To get the current active locale in the app:
+
+```dart
+Locale locale = Localized.current;
 ```

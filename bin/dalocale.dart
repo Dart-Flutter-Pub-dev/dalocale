@@ -96,6 +96,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   // localized
   file.write('\nclass Localized {\n');
   file.write('  static BaseLocalized get;\n');
+  file.write('  static Locale current;\n');
   file.write('\n');
   file.write('  static List<Locale> locales =\n');
   file.write('      localized.keys.map((String l) => Locale(l)).toList();\n');
@@ -120,6 +121,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
       '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
   file.write('\n');
   file.write('  static void load(Locale locale) {\n');
+  file.write('    current = locale;\n');
   file.write('    get = localized[locale.languageCode];\n');
   file.write('  }\n');
   file.write('}\n');

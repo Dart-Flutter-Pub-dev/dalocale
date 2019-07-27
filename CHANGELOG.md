@@ -21,3 +21,7 @@
 ## [1.5.0] - 2019-06-30
 
 * Changed parameter system
+
+## [1.6.0] - 2019-07-27
+
+* Added field for current locale
