@@ -14,6 +14,40 @@ Future<void> main(List<String> args) async {
   final List<LocalizationGroup> groups = await getGroups(jsonFiles);
 
   generateFile(output, groups);
+
+  if (args.length > 3) {
+    final List<String> keys =
+        groups[0].entries.map((LocalizationEntry e) => e.keyName()).toList();
+    final Directory root = Directory(args[3]);
+
+    final List<FileSystemEntity> entities = root.listSync(recursive: true);
+    final File outPutFile = File(output);
+
+    for (FileSystemEntity entity in entities) {
+      if (entity.path.endsWith('.dart') && (entity.path != outPutFile.path)) {
+        keys.removeWhere((String key) => existsInFile(key, entity));
+      }
+
+      if (keys.isEmpty) {
+        break;
+      }
+    }
+
+    if (keys.isNotEmpty) {
+      print('Unused keys:');
+
+      for (String key in keys) {
+        print(key);
+      }
+    }
+  }
+}
+
+bool existsInFile(String key, FileSystemEntity entity) {
+  final File file = File(entity.path);
+  final String content = file.readAsStringSync();
+
+  return content.contains(key);
 }
 
 List<File> getJsonFiles(String root, String defaultLocale) {
@@ -217,26 +251,26 @@ class LocalizationEntry {
 
   String lineBase() {
     if (params.isEmpty) {
-      return '\n  String get ${_sanitizeKey(key)};\n';
+      return '\n  String get ${keyName()};\n';
     } else {
-      return '\n  String ${_sanitizeKey(key)}(${_parameterList(params)});\n';
+      return '\n  String ${keyName()}(${_parameterList(params)});\n';
     }
   }
 
   String _line(String value) {
     if (params.isEmpty) {
-      return "  String get ${_sanitizeKey(key)} => '$value';\n";
+      return "  String get ${keyName()} => '$value';\n";
     } else {
-      return "  String ${_sanitizeKey(key)}(${_parameterList(params)}) => '$value';\n";
+      return "  String ${keyName()}(${_parameterList(params)}) => '$value';\n";
     }
   }
 
-  String _sanitizeKey(String value) {
+  String keyName() {
     String result = '';
     bool shouldCapitalize = false;
 
-    for (int i = 0; i < value.length; i++) {
-      final String char = value[i];
+    for (int i = 0; i < key.length; i++) {
+      final String char = key[i];
 
       if (char == '.') {
         shouldCapitalize = true;

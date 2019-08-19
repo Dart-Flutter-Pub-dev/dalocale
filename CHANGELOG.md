@@ -25,3 +25,7 @@
 ## [1.6.0] - 2019-07-27
 
 * Added field for current locale
+
+## [1.7.0] - 2019-08-19
+
+* Added check for unused keys
