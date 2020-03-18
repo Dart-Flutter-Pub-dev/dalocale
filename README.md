@@ -51,24 +51,24 @@ Parameters inside of localized text must be declared as `%index$format`, where:
 To generate the **Dart** file containing all the localizations, run the following command:
 
 ```bash
-flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE [DEFAULT_LOCALE] [LIB_FOLDER]
+flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FOLDER [DEFAULT_LOCALE] [LIB_FOLDER]
 ```
 
 For example:
 
 ```bash
-flutter pub pub run dalocale:dalocale.dart ./assets/i18n/ ./lib/foo/bar/localizations.dart en ./lib
+flutter pub pub run dalocale:dalocale.dart ./assets/i18n/ ./lib/foo/bar/localizations en ./lib
 ```
 
 The `LIB_FOLDER` parameter is used to check for unused keys in the project.
 
 ### Using generated code
 
-In you `main.dart` file, add the auto-generated classes `CustomLocalizationsDelegate` and `Localized` to the app:
+In you `main.dart` file, add the auto-generated classes `CustomLocalizationsDelegate` and `LocalizationManager` to the app:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_library/foo/bar/localizations.dart';
+import 'package:flutter_library/foo/bar/localization_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: Localized.locales,
+      supportedLocales: LocalizationManager.locales,
     );
   }
 }
@@ -104,5 +104,5 @@ Text(Localized.get.welcomeBack('John'))
 To get the current active locale in the app:
 
 ```dart
-Locale locale = Localized.current;
+Locale locale = LocalizationManager.current;
 ```
