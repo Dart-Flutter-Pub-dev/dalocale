@@ -103,82 +103,88 @@ Future<List<LocalizationEntry>> getEntries(File file) async {
   final Map<String, dynamic> json = jsonDecode(content);
   final List<LocalizationEntry> entries = <LocalizationEntry>[];
 
-  for (String entry in json.keys) {
-    entries.add(LocalizationEntry.create(entry, json[entry]));
+  for (String key in json.keys) {
+    entries.add(LocalizationEntry.create(key, json[key]));
   }
 
   return entries;
 }
 
 Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
-  final SourceFile file = SourceFile(output);
-  file.clear();
-
-  // imports
-  file.write("import 'package:flutter/foundation.dart';\n");
-  file.write("import 'package:flutter/widgets.dart';\n");
-  file.write('\n');
+  final SourceFile managerfile = SourceFile('${output}/localization_manager.dart');
+  final SourceFile stringFile = SourceFile('${output}/localizations.dart');
+  managerfile.clear();
+  stringFile.clear();
 
   // base
-  file.write(groups[0].base());
+  stringFile.write(groups[0].base());
 
   // concrete
   for (LocalizationGroup group in groups) {
-    file.write('\n${group.concrete()}');
+    stringFile.write('\n${group.concrete()}');
   }
 
-  // localized
-  file.write('\nclass Localized {\n');
-  file.write('  static BaseLocalized get;\n');
-  file.write('  static Locale current;\n');
-  file.write('\n');
-  file.write('  static List<Locale> locales =\n');
-  file.write('      localized.keys.map((String l) => Locale(l)).toList();\n');
-  file.write('\n');
-  file.write(
-      '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n');
+  // imports
+  managerfile.write("import 'package:flutter/foundation.dart';\n");
+  managerfile.write("import 'package:flutter/widgets.dart';\n");
+  managerfile.write("import './localizations.dart';\n");
 
+  managerfile.write('\nclass LocalizationManager {\n');
+  managerfile.write('  static Locale current;\n');
+  managerfile.write('  static List<String> supportedLanguageCodes = [');
+  managerfile.write(groups.map((LocalizationGroup group) => "'${group.locale}'").join(', '));
+  managerfile.write('];\n');
+  managerfile.write('  static List<Locale> get locales =>\n');
+  managerfile.write('      supportedLanguageCodes.map((String l) => Locale(l)).toList();\n');
+  managerfile.write('\n');
+
+  managerfile.write('  static bool isSupported(Locale locale) =>\n');
+  managerfile.write(
+      '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
+  managerfile.write('\n');
+  managerfile.write('  static void load(Locale locale) {\n');
+  managerfile.write('    current = locale;\n');
+  managerfile.write('    Localized.get = localizedForLocal(locale);\n');
+  managerfile.write('  }\n');
+  managerfile.write('\n');
+
+  managerfile.write(
+      '  static BaseLocalized localizedForLocal(Locale locale) {\n');
+  managerfile.write('    switch (locale.languageCode) {\n');
   for (int i = 0; i < groups.length; i++) {
     final LocalizationGroup group = groups[i];
-    file.write('    ${group.mapEntry()}');
-
-    if (i < (groups.length - 1)) {
-      file.write(',\n');
-    } else {
-      file.write('\n');
-    }
+    managerfile.write("     case '${group.locale}': return ${group.className()}();\n");
   }
-  file.write('  };\n');
-  file.write('\n');
-  file.write('  static bool isSupported(Locale locale) =>\n');
-  file.write(
-      '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
-  file.write('\n');
-  file.write('  static void load(Locale locale) {\n');
-  file.write('    current = locale;\n');
-  file.write('    get = localized[locale.languageCode];\n');
-  file.write('  }\n');
-  file.write('}\n');
+  final LocalizationGroup defaultGroup = groups[0];
+  managerfile.write("     default: return ${defaultGroup.className()}();\n");
+  managerfile.write('    }\n');
+  managerfile.write('  }\n');
+  managerfile.write('}\n');
 
   // delegate
-  file.write(
+  managerfile.write(
       '\nclass CustomLocalizationsDelegate extends LocalizationsDelegate<dynamic> {\n');
-  file.write('  const CustomLocalizationsDelegate();\n');
-  file.write('\n');
-  file.write('  @override\n');
-  file.write(
-      '  bool isSupported(Locale locale) => Localized.isSupported(locale);\n');
-  file.write('\n');
-  file.write('  @override\n');
-  file.write('  Future<dynamic> load(Locale locale) {\n');
-  file.write('    Localized.load(locale);\n');
-  file.write('    return SynchronousFuture<dynamic>(Object());\n');
-  file.write('  }\n');
-  file.write('\n');
-  file.write('  @override\n');
-  file.write(
+  managerfile.write('  const CustomLocalizationsDelegate();\n');
+  managerfile.write('\n');
+  managerfile.write('  @override\n');
+  managerfile.write(
+      '  bool isSupported(Locale locale) => LocalizationManager.isSupported(locale);\n');
+  managerfile.write('\n');
+  managerfile.write('  @override\n');
+  managerfile.write('  Future<dynamic> load(Locale locale) {\n');
+  managerfile.write('    LocalizationManager.load(locale);\n');
+  managerfile.write('    return SynchronousFuture<dynamic>(Object());\n');
+  managerfile.write('  }\n');
+  managerfile.write('\n');
+  managerfile.write('  @override\n');
+  managerfile.write(
       '  bool shouldReload(CustomLocalizationsDelegate old) => false;\n');
-  file.write('}\n');
+  managerfile.write('}\n');
+
+  // localized
+  stringFile.write('\nclass Localized {\n');
+  stringFile.write("  static BaseLocalized get = ${defaultGroup.className()}();\n");
+  stringFile.write('}\n');
 }
 
 class LocalizationGroup {
@@ -187,12 +193,8 @@ class LocalizationGroup {
 
   LocalizationGroup(this.locale, this.entries);
 
-  String name() {
-    return locale.toUpperCase();
-  }
-
-  String mapEntry() {
-    return "'$locale': ${name()}Localized()";
+  String className() {
+    return locale.toUpperCase() + 'Localized';
   }
 
   String base() {
@@ -208,7 +210,7 @@ class LocalizationGroup {
   }
 
   String concrete() {
-    String result = 'class ${name()}Localized extends BaseLocalized {';
+    String result = 'class ${className()} extends BaseLocalized {';
 
     for (LocalizationEntry entry in entries) {
       result += entry.lineConcrete();
