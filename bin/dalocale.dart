@@ -130,7 +130,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   managerfile.write("import './localizations.dart';\n");
 
   managerfile.write('\nclass LocalizationManager {\n');
-  managerfile.write('  static Locale current;\n');
+  managerfile.write('  static Locale currentLocale;\n');
   managerfile.write('  static List<String> supportedLanguageCodes = [');
   managerfile.write(groups.map((LocalizationGroup group) => "'${group.locale}'").join(', '));
   managerfile.write('];\n');
@@ -143,7 +143,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
       '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
   managerfile.write('\n');
   managerfile.write('  static void load(Locale locale) {\n');
-  managerfile.write('    current = locale;\n');
+  managerfile.write('    currentLocale = locale;\n');
   managerfile.write('    Localized.get = localizedForLocal(locale);\n');
   managerfile.write('  }\n');
   managerfile.write('\n');
