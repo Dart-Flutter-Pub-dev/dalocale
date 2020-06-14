@@ -23,7 +23,7 @@ Future<void> main(List<String> args) async {
     final List<FileSystemEntity> entities = root.listSync(recursive: true);
     final File outPutFile = File(output);
 
-    for (FileSystemEntity entity in entities) {
+    for (final FileSystemEntity entity in entities) {
       if (entity.path.endsWith('.dart') && (entity.path != outPutFile.path)) {
         keys.removeWhere((String key) => existsInFile(key, entity));
       }
@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
     if (keys.isNotEmpty) {
       print('Unused keys:');
 
-      for (String key in keys) {
+      for (final String key in keys) {
         print(key);
       }
     }
@@ -56,7 +56,7 @@ List<File> getJsonFiles(String root, String defaultLocale) {
       folder.listSync(recursive: false, followLinks: false);
   final List<File> result = <File>[];
 
-  for (FileSystemEntity fileOrDir in contents) {
+  for (final FileSystemEntity fileOrDir in contents) {
     if (fileOrDir is File) {
       result.add(File(fileOrDir.path));
     }
@@ -87,7 +87,7 @@ List<File> getJsonFiles(String root, String defaultLocale) {
 Future<List<LocalizationGroup>> getGroups(List<File> files) async {
   final List<LocalizationGroup> groups = <LocalizationGroup>[];
 
-  for (File file in files) {
+  for (final File file in files) {
     final String filename = basename(file.path);
     final List<String> parts = filename.split('.');
     final List<LocalizationEntry> entries = await getEntries(file);
@@ -103,7 +103,7 @@ Future<List<LocalizationEntry>> getEntries(File file) async {
   final Map<String, dynamic> json = jsonDecode(content);
   final List<LocalizationEntry> entries = <LocalizationEntry>[];
 
-  for (String entry in json.keys) {
+  for (final String entry in json.keys) {
     entries.add(LocalizationEntry.create(entry, json[entry]));
   }
 
@@ -123,7 +123,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write(groups[0].base());
 
   // concrete
-  for (LocalizationGroup group in groups) {
+  for (final LocalizationGroup group in groups) {
     file.write('\n${group.concrete()}');
   }
 
@@ -140,7 +140,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
 
   for (int i = 0; i < groups.length; i++) {
     final LocalizationGroup group = groups[i];
-    file.write('    ${group.mapEntry()}');
+    file.write('    ${group.mapEntry}');
 
     if (i < (groups.length - 1)) {
       file.write(',\n');
@@ -187,36 +187,28 @@ class LocalizationGroup {
 
   LocalizationGroup(this.locale, this.entries);
 
-  String name() {
-    return locale.toUpperCase();
-  }
+  String get name => locale.toUpperCase();
 
-  String mapEntry() {
-    return "'$locale': ${name()}Localized()";
-  }
+  String get mapEntry => "'$locale': ${name}Localized()";
 
   String base() {
     String result = 'abstract class BaseLocalized {';
 
-    for (LocalizationEntry entry in entries) {
+    for (final LocalizationEntry entry in entries) {
       result += entry.lineBase();
     }
 
-    result += '}\n';
-
-    return result;
+    return '$result }\n';
   }
 
   String concrete() {
-    String result = 'class ${name()}Localized extends BaseLocalized {';
+    String result = 'class ${name}Localized extends BaseLocalized {';
 
-    for (LocalizationEntry entry in entries) {
-      result += entry.lineConcrete();
+    for (final LocalizationEntry entry in entries) {
+      result += entry.lineConcrete;
     }
 
-    result += '}\n';
-
-    return result;
+    return '$result }\n';
   }
 }
 
@@ -228,26 +220,26 @@ class LocalizationEntry {
   LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
   static LocalizationEntry create(String key, String value) {
+    String finalValue = value;
     final RegExp exp = RegExp(r'%[0-9]\$([sdf])');
-    final List<String> params =
-        exp.allMatches(value).toList().map((Match r) => r.group(1)).toList();
+    final List<String> params = exp
+        .allMatches(finalValue)
+        .toList()
+        .map((Match r) => r.group(1))
+        .toList();
 
     for (int i = 1; i <= params.length; i++) {
       final String param = params[i - 1];
-      value = value.replaceFirst('%$i\$$param', '\$\{param$i.toString()\}');
+      finalValue =
+          finalValue.replaceFirst('%$i\$$param', '\${param$i.toString()}');
     }
 
-    value = value.replaceAll("'", "\\'");
+    finalValue = finalValue.replaceAll("'", "\\'");
 
-    return LocalizationEntry(key, value, params);
+    return LocalizationEntry(key, finalValue, params);
   }
 
-  String lineConcrete() {
-    String result = '\n  @override\n';
-    result += _line(value);
-
-    return result;
-  }
+  String get lineConcrete => '\n  @override\n${_line(value)}';
 
   String lineBase() {
     if (params.isEmpty) {
@@ -314,11 +306,8 @@ class SourceFile {
 
   SourceFile(String path) : file = File(path);
 
-  void clear() {
-    file.writeAsStringSync('');
-  }
+  void clear() => file.writeAsStringSync('');
 
-  void write(String content) {
-    file.writeAsStringSync(content, mode: FileMode.append);
-  }
+  void write(String content) =>
+      file.writeAsStringSync(content, mode: FileMode.append);
 }

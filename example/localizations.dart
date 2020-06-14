@@ -11,7 +11,7 @@ abstract class BaseLocalized {
   String totalCost(double param1);
 
   String appointment(String param1, String param2);
-}
+ }
 
 class ENLocalized extends BaseLocalized {
   @override
@@ -28,7 +28,7 @@ class ENLocalized extends BaseLocalized {
 
   @override
   String appointment(String param1, String param2) => 'Your appointment is on ${param1.toString()} at ${param2.toString()}';
-}
+ }
 
 class ESLocalized extends BaseLocalized {
   @override
@@ -45,7 +45,7 @@ class ESLocalized extends BaseLocalized {
 
   @override
   String appointment(String param1, String param2) => 'Su cita es el ${param1.toString()} a las ${param2.toString()}';
-}
+ }
 
 class Localized {
   static BaseLocalized get;
