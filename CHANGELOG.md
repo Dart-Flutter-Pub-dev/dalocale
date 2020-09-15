@@ -30,6 +30,6 @@
 
 * Added check for unused keys
 
-## [1.8.0] - 2020-09-15
+## [1.9.0] - 2020-09-15
 
 * Code cleanup

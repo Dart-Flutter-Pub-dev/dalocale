@@ -1,4 +1,5 @@
 #!/usr/bin/env dart
+
 library dalocale;
 
 import 'dart:convert';
