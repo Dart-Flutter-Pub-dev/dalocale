@@ -4,7 +4,7 @@ A **Flutter** package to easily support internationalization and localization in
 
 ## Installation
 
-Add the following dependencies to your `pubspec.yaml`:
+Add the following dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies: 

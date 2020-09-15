@@ -29,3 +29,7 @@
 ## [1.7.0] - 2019-08-19
 
 * Added check for unused keys
+
+## [1.8.0] - 2020-09-15
+
+* Code cleanup
