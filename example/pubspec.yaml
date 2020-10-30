@@ -1,6 +1,6 @@
 name: dalocale_example
 description: Example code for the dalocale library.
-version: 1.0.0
+version: 2.0.0
 homepage: https://github.com/mauriciotogneri/dalocale
 
 environment:
@@ -17,6 +17,7 @@ dependencies:
   path: ^1.7.0
 
 dev_dependencies:
+  dalocale: ^2.0.0
 
   flutter_test:
     sdk: flutter

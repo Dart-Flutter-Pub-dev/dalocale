@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../example/localizations.dart';
+import '../localizations.dart';
 
 void main() {
   test('simple test', () {

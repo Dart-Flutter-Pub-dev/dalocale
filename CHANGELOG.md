@@ -33,3 +33,7 @@
 ## [1.9.0] - 2020-09-15
 
 * Code cleanup
+
+## [2.0.0] - 2020-09-29
+
+* Removed Flutter dependency
