@@ -37,3 +37,7 @@
 ## [2.0.0] - 2020-09-29
 
 * Removed Flutter dependency
+
+## [2.1.0] - 2021-03-07
+
+* Added support for null safety
