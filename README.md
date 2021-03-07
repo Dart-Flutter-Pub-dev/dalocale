@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter 
 
 dev_dependencies:
-  dalocale: ^2.1.0
+  dalocale: ^2.2.0
 ```
 
 ## Example

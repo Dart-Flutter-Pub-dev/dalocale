@@ -38,6 +38,6 @@
 
 * Removed Flutter dependency
 
-## [2.1.0] - 2021-03-07
+## [2.2.0] - 2021-03-07
 
 * Added support for null safety
