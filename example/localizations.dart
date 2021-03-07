@@ -48,8 +48,8 @@ class ESLocalized extends BaseLocalized {
  }
 
 class Localized {
-  static BaseLocalized get;
-  static Locale current;
+  static late BaseLocalized get;
+  static late Locale current;
 
   static List<Locale> locales =
       localized.keys.map((String l) => Locale(l)).toList();
@@ -64,7 +64,7 @@ class Localized {
 
   static void load(Locale locale) {
     current = locale;
-    get = localized[locale.languageCode];
+    get = localized[locale.languageCode]!;
   }
 }
 

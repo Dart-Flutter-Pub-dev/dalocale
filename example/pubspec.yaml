@@ -4,7 +4,7 @@ version: 2.1.0
 homepage: https://github.com/mauriciotogneri/dalocale
 
 environment:
-  sdk: ">=2.10.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
 
@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  path: ^1.7.0
+  path: ^1.8.0
 
 dev_dependencies:
   dalocale: ^2.1.0

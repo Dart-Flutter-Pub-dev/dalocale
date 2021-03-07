@@ -4,6 +4,7 @@ library dalocale;
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 
 Future<void> main(List<String> args) async {
@@ -64,9 +65,8 @@ List<File> getJsonFiles(String root, String defaultLocale) {
   }
 
   if (defaultLocale.isNotEmpty) {
-    final File defaultFile = result.firstWhere(
-        (File f) => basename(f.path) == '$defaultLocale.json',
-        orElse: () => null);
+    final File? defaultFile = result.firstWhereOrNull(
+        (File f) => basename(f.path) == '$defaultLocale.json');
 
     if (defaultFile == null) {
       throw Exception(
@@ -130,8 +130,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
 
   // localized
   file.write('\nclass Localized {\n');
-  file.write('  static BaseLocalized get;\n');
-  file.write('  static Locale current;\n');
+  file.write('  static late BaseLocalized get;\n');
+  file.write('  static late Locale current;\n');
   file.write('\n');
   file.write('  static List<Locale> locales =\n');
   file.write('      localized.keys.map((String l) => Locale(l)).toList();\n');
@@ -157,7 +157,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('\n');
   file.write('  static void load(Locale locale) {\n');
   file.write('    current = locale;\n');
-  file.write('    get = localized[locale.languageCode];\n');
+  file.write('    get = localized[locale.languageCode]!;\n');
   file.write('  }\n');
   file.write('}\n');
 
@@ -216,21 +216,21 @@ class LocalizationGroup {
 class LocalizationEntry {
   final String key;
   final String value;
-  final List<String> params;
+  final List<String?> params;
 
   LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
   static LocalizationEntry create(String key, String value) {
     String finalValue = value;
     final RegExp exp = RegExp(r'%[0-9]\$([sdf])');
-    final List<String> params = exp
+    final List<String?> params = exp
         .allMatches(finalValue)
         .toList()
         .map((Match r) => r.group(1))
         .toList();
 
     for (int i = 1; i <= params.length; i++) {
-      final String param = params[i - 1];
+      final String? param = params[i - 1];
       finalValue =
           finalValue.replaceFirst('%$i\$$param', '\${param$i.toString()}');
     }
@@ -278,11 +278,11 @@ class LocalizationEntry {
     return result;
   }
 
-  String _parameterList(List<String> parameters) {
+  String _parameterList(List<String?> parameters) {
     String result = '';
 
     for (int i = 1; i <= parameters.length; i++) {
-      final String parameter = parameters[i - 1];
+      final String? parameter = parameters[i - 1];
       result += result.isEmpty ? '' : ', ';
 
       if (parameter == 's') {
