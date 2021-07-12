@@ -82,7 +82,28 @@ List<File> getJsonFiles(String root, String defaultLocale) {
     result.addAll(rest);
   }
 
+  for (final File file in result) {
+    sortFile(file);
+  }
+
   return result;
+}
+
+void sortFile(File file) {
+  String content = file.readAsStringSync();
+  final Map<String, dynamic> json = jsonDecode(content);
+
+  final List<String> sortedKeys = json.keys.toList()..sort();
+  final Map<String, dynamic> map = <String, dynamic>{};
+
+  for (final String key in sortedKeys) {
+    map[key] = json[key];
+  }
+
+  const JsonEncoder encoder = JsonEncoder.withIndent('    ');
+  content = encoder.convert(map);
+
+  file.writeAsStringSync(content, mode: FileMode.write);
 }
 
 Future<List<LocalizationGroup>> getGroups(List<File> files) async {

@@ -41,3 +41,7 @@
 ## [2.2.0] - 2021-03-07
 
 * Added support for null safety
+
+## [2.3.0] - 2021-07-12
+
+* Sorting input files keys
