@@ -45,3 +45,7 @@
 ## [2.3.0] - 2021-07-12
 
 * Sorting input files keys
+
+## [2.3.1] - 2021-11-02
+
+* Fixing quotes

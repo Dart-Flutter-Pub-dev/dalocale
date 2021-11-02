@@ -256,8 +256,6 @@ class LocalizationEntry {
           finalValue.replaceFirst('%$i\$$param', '\${param$i.toString()}');
     }
 
-    finalValue = finalValue.replaceAll("'", "\\'");
-
     return LocalizationEntry(key, finalValue, params);
   }
 
@@ -273,7 +271,11 @@ class LocalizationEntry {
 
   String _line(String value) {
     if (params.isEmpty) {
-      return "  String get ${keyName()} => '$value';\n";
+      if (value.contains("'")) {
+        return '  String get ${keyName()} => "$value";\n';
+      } else {
+        return "  String get ${keyName()} => '$value';\n";
+      }
     } else {
       return "  String ${keyName()}(${_parameterList(params)}) => '$value';\n";
     }
