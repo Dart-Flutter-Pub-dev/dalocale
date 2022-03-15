@@ -1,6 +1,6 @@
 name: dalocale
 description: A Flutter package to easily support internationalization and localization in your project.
-version: 2.3.2
+version: 2.4.0
 homepage: https://github.com/mauriciotogneri/dalocale
 
 environment:
@@ -8,4 +8,4 @@ environment:
 
 dependencies:
   collection: ^1.16.0
-  path: ^1.8.1
+  path: ^1.8.0
