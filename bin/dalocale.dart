@@ -155,7 +155,7 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('  static late Locale current;\n');
   file.write('\n');
   file.write('  static List<Locale> locales =\n');
-  file.write('      localized.keys.map((String l) => Locale(l)).toList();\n');
+  file.write('      localized.keys.map(Locale.new).toList();\n');
   file.write('\n');
   file.write(
       '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n');

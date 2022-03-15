@@ -49,3 +49,7 @@
 ## [2.3.1] - 2021-11-02
 
 * Fixing quotes
+
+## [2.3.2] - 2022-03-15
+
+* Removing warning
