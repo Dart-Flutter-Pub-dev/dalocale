@@ -241,7 +241,7 @@ class LocalizationEntry {
 
   LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
-  static LocalizationEntry create(String key, String value) {
+  factory LocalizationEntry.create(String key, String value) {
     String finalValue = value;
     final RegExp exp = RegExp(r'%[0-9]\$([sdf])');
     final List<String?> params = exp
@@ -277,7 +277,11 @@ class LocalizationEntry {
         return "  String get ${keyName()} => '$value';\n";
       }
     } else {
-      return "  String ${keyName()}(${_parameterList(params)}) => '$value';\n";
+      if (value.contains("'")) {
+        return '  String ${keyName()}(${_parameterList(params)}) => "$value";\n';
+      } else {
+        return "  String ${keyName()}(${_parameterList(params)}) => '$value';\n";
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 {
-    "greetings": "Hello, world!",
-    "welcome.back": "Welcome back: '%1$s'",
     "age": "You are %1$d years old",
+    "appointment": "Your appointment is on %1$s at %2$s",
+    "greetings": "Hello, world!",
     "totalCost": "The total cost is: %1$f USD",
-    "appointment": "Your appointment is on %1$s at %2$s"
+    "welcome.back": "Welcome back: '%1$s'"
 }
