@@ -2,6 +2,8 @@
     "age": "You are %1$d years old",
     "appointment": "Your appointment is on %1$s at %2$s",
     "greetings": "Hello, world!",
+    "multiline": "This is the first line\nThis is the second line",
+    "multiline.params": "The first price is %1$s\nThe second price is %2$s",
     "totalCost": "The total cost is: %1$f USD",
     "welcome.back": "Welcome back: '%1$s'"
 }

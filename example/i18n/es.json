@@ -2,6 +2,8 @@
     "age": "Tienes %1$d años",
     "appointment": "Su cita es el %1$s a las %2$s",
     "greetings": "Hola, mundo!",
+    "multiline": "Ésta es la primera linea\nÉsta es la segunda linea",
+    "multiline.params": "El primer premio es %1$s\nEl segundo premio es %2$s",
     "totalCost": "El coste total es de: %1$f USD",
     "welcome.back": "Bienvenido: '%1$s'"
 }

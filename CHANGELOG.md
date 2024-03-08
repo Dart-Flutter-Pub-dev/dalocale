@@ -65,3 +65,7 @@
 ## [2.4.2] - 2022-07-22
 
 * Fixed apostrophe when using parameters
+
+## [2.5.0] - 2024-03-08
+
+* Implement multiline strings

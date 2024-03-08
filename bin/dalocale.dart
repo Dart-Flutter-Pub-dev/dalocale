@@ -239,7 +239,11 @@ class LocalizationEntry {
   final String value;
   final List<String?> params;
 
-  LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
+  LocalizationEntry(
+    this.key,
+    this.value, [
+    this.params = const <String>[],
+  ]);
 
   factory LocalizationEntry.create(String key, String value) {
     String finalValue = value;
@@ -271,13 +275,17 @@ class LocalizationEntry {
 
   String _line(String value) {
     if (params.isEmpty) {
-      if (value.contains("'")) {
+      if (value.contains('\r') || value.contains('\n')) {
+        return "  String get ${keyName()} => '''$value''';\n";
+      } else if (value.contains("'")) {
         return '  String get ${keyName()} => "$value";\n';
       } else {
         return "  String get ${keyName()} => '$value';\n";
       }
     } else {
-      if (value.contains("'")) {
+      if (value.contains('\r') || value.contains('\n')) {
+        return "  String ${keyName()}(${_parameterList(params)}) => '''$value''';\n";
+      } else if (value.contains("'")) {
         return '  String ${keyName()}(${_parameterList(params)}) => "$value";\n';
       } else {
         return "  String ${keyName()}(${_parameterList(params)}) => '$value';\n";

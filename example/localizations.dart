@@ -8,6 +8,10 @@ abstract class BaseLocalized {
 
   String get greetings;
 
+  String get multiline;
+
+  String multilineParams(String param1, String param2);
+
   String totalCost(double param1);
 
   String welcomeBack(String param1);
@@ -22,6 +26,14 @@ class ENLocalized extends BaseLocalized {
 
   @override
   String get greetings => 'Hello, world!';
+
+  @override
+  String get multiline => '''This is the first line
+This is the second line''';
+
+  @override
+  String multilineParams(String param1, String param2) => '''The first price is ${param1.toString()}
+The second price is ${param2.toString()}''';
 
   @override
   String totalCost(double param1) => 'The total cost is: ${param1.toString()} USD';
@@ -39,6 +51,14 @@ class ESLocalized extends BaseLocalized {
 
   @override
   String get greetings => 'Hola, mundo!';
+
+  @override
+  String get multiline => '''Ésta es la primera linea
+Ésta es la segunda linea''';
+
+  @override
+  String multilineParams(String param1, String param2) => '''El primer premio es ${param1.toString()}
+El segundo premio es ${param2.toString()}''';
 
   @override
   String totalCost(double param1) => 'El coste total es de: ${param1.toString()} USD';
