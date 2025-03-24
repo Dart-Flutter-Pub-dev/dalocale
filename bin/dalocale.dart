@@ -27,7 +27,13 @@ Future generate({
   required String defaultLocale,
   String? libFolder,
 }) async {
-  final List<File> jsonFiles = getJsonFiles(input[0], defaultLocale);
+  final List<File> jsonFiles = [];
+
+  for (final String path in input) {
+    final List<File> files = getJsonFiles(path, defaultLocale);
+    jsonFiles.addAll(files);
+  }
+
   final List<LocalizationGroup> groups = await getGroups(jsonFiles);
 
   await generateFile(output, groups);
@@ -127,7 +133,7 @@ void sortFile(File file) {
 }
 
 Future<List<LocalizationGroup>> getGroups(List<File> files) async {
-  final List<LocalizationGroup> groups = <LocalizationGroup>[];
+  final Map<String, LocalizationGroup> groups = {};
 
   for (final File file in files) {
     final String filename = basename(file.path);
@@ -135,10 +141,15 @@ Future<List<LocalizationGroup>> getGroups(List<File> files) async {
     final List<LocalizationEntry> entries = await getEntries(file);
     final String locale = parts[0].toLowerCase();
 
-    groups.add(LocalizationGroup(locale, entries));
+    if (groups.containsKey(locale)) {
+      final LocalizationGroup group = groups[locale]!;
+      group.entries.addAll(entries);
+    } else {
+      groups[locale] = LocalizationGroup(locale, entries);
+    }
   }
 
-  return groups;
+  return groups.values.toList();
 }
 
 Future<List<LocalizationEntry>> getEntries(File file) async {
@@ -318,6 +329,12 @@ class LocalizationEntry {
     }
   }
 
+  bool isValidCharacter(String character) {
+    final regex = RegExp(r'^[a-zA-Z0-9_]$');
+
+    return regex.hasMatch(character);
+  }
+
   String keyName() {
     String result = '';
     bool shouldCapitalize = false;
@@ -325,7 +342,7 @@ class LocalizationEntry {
     for (int i = 0; i < key.length; i++) {
       final String char = key[i];
 
-      if (char == '.') {
+      if (!isValidCharacter(char)) {
         shouldCapitalize = true;
       } else if (shouldCapitalize) {
         result += char.toUpperCase();

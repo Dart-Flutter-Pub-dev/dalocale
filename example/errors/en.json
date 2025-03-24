@@ -1,4 +1,4 @@
 {
-    "network/no-network": "There is no network connection",
-    "authenticaiton/invalid-credentials": "Invalid credentials"
+    "authenticaiton/invalid-credentials": "Invalid credentials",
+    "network/no-network": "There is no network connection"
 }

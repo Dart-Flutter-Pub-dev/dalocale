@@ -15,6 +15,10 @@ abstract class BaseLocalized {
   String totalCost(double param1);
 
   String welcomeBack(String param1);
+
+  String get authenticaitonInvalidCredentials;
+
+  String get networkNoNetwork;
  }
 
 class ENLocalized extends BaseLocalized {
@@ -40,6 +44,12 @@ The second price is ${param2.toString()}''';
 
   @override
   String welcomeBack(String param1) => "Welcome back: '${param1.toString()}'";
+
+  @override
+  String get authenticaitonInvalidCredentials => 'Invalid credentials';
+
+  @override
+  String get networkNoNetwork => 'There is no network connection';
  }
 
 class ESLocalized extends BaseLocalized {
@@ -65,6 +75,12 @@ El segundo premio es ${param2.toString()}''';
 
   @override
   String welcomeBack(String param1) => "Bienvenido: '${param1.toString()}'";
+
+  @override
+  String get authenticaitonInvalidCredentials => 'Credenciales inválidas';
+
+  @override
+  String get networkNoNetwork => 'No hay conexión de red';
  }
 
 class Localized {

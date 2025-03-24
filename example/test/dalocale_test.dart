@@ -26,5 +26,11 @@ void main() {
       ENLocalized().multilineParams('Gold', 'Silver'),
       equals('The first price is Gold\nThe second price is Silver'),
     );
+
+    expect(ESLocalized().networkNoNetwork, equals('No hay conexión de red'));
+    expect(
+      ESLocalized().authenticaitonInvalidCredentials,
+      equals('Credenciales inválidas'),
+    );
   });
 }
