@@ -7,20 +7,35 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 
-Future<void> main(List<String> args) async {
+Future main(List<String> args) {
   final String input = args[0];
   final String output = args[1];
   final String defaultLocale = (args.length > 2) ? args[2] : '';
+  final String? libFolder = (args.length > 3) ? args[3] : null;
 
-  final List<File> jsonFiles = getJsonFiles(input, defaultLocale);
+  return generate(
+    input: input.split(','),
+    output: output,
+    defaultLocale: defaultLocale,
+    libFolder: libFolder,
+  );
+}
+
+Future generate({
+  required List<String> input,
+  required String output,
+  required String defaultLocale,
+  String? libFolder,
+}) async {
+  final List<File> jsonFiles = getJsonFiles(input[0], defaultLocale);
   final List<LocalizationGroup> groups = await getGroups(jsonFiles);
 
-  generateFile(output, groups);
+  await generateFile(output, groups);
 
-  if (args.length > 3) {
+  if (libFolder != null) {
     final List<String> keys =
         groups[0].entries.map((LocalizationEntry e) => e.keyName()).toList();
-    final Directory root = Directory(args[3]);
+    final Directory root = Directory(libFolder);
 
     final List<FileSystemEntity> entities = root.listSync(recursive: true);
     final File outPutFile = File(output);
@@ -54,8 +69,10 @@ bool existsInFile(String key, FileSystemEntity entity) {
 
 List<File> getJsonFiles(String root, String defaultLocale) {
   final Directory folder = Directory(root);
-  final List<FileSystemEntity> contents =
-      folder.listSync(recursive: false, followLinks: false);
+  final List<FileSystemEntity> contents = folder.listSync(
+    recursive: false,
+    followLinks: false,
+  );
   final List<File> result = <File>[];
 
   for (final FileSystemEntity fileOrDir in contents) {
@@ -66,16 +83,19 @@ List<File> getJsonFiles(String root, String defaultLocale) {
 
   if (defaultLocale.isNotEmpty) {
     final File? defaultFile = result.firstWhereOrNull(
-        (File f) => basename(f.path) == '$defaultLocale.json');
+      (File f) => basename(f.path) == '$defaultLocale.json',
+    );
 
     if (defaultFile == null) {
       throw Exception(
-          'Default locale "$defaultLocale" not found in input files');
+        'Default locale "$defaultLocale" not found in input files',
+      );
     }
 
-    final List<File> rest = result
-        .where((File f) => basename(f.path) != '$defaultLocale.json')
-        .toList();
+    final List<File> rest =
+        result
+            .where((File f) => basename(f.path) != '$defaultLocale.json')
+            .toList();
 
     result.clear();
     result.add(defaultFile);
@@ -113,8 +133,9 @@ Future<List<LocalizationGroup>> getGroups(List<File> files) async {
     final String filename = basename(file.path);
     final List<String> parts = filename.split('.');
     final List<LocalizationEntry> entries = await getEntries(file);
+    final String locale = parts[0].toLowerCase();
 
-    groups.add(LocalizationGroup(parts[0].toLowerCase(), entries));
+    groups.add(LocalizationGroup(locale, entries));
   }
 
   return groups;
@@ -158,7 +179,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('      localized.keys.map(Locale.new).toList();\n');
   file.write('\n');
   file.write(
-      '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n');
+    '  static Map<String, BaseLocalized> localized = <String, BaseLocalized>{\n',
+  );
 
   for (int i = 0; i < groups.length; i++) {
     final LocalizationGroup group = groups[i];
@@ -174,7 +196,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('\n');
   file.write('  static bool isSupported(Locale locale) =>\n');
   file.write(
-      '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n');
+    '      locales.map((Locale l) => l.languageCode).contains(locale.languageCode);\n',
+  );
   file.write('\n');
   file.write('  static void load(Locale locale) {\n');
   file.write('    current = locale;\n');
@@ -184,12 +207,14 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
 
   // delegate
   file.write(
-      '\nclass CustomLocalizationsDelegate extends LocalizationsDelegate<dynamic> {\n');
+    '\nclass CustomLocalizationsDelegate extends LocalizationsDelegate<dynamic> {\n',
+  );
   file.write('  const CustomLocalizationsDelegate();\n');
   file.write('\n');
   file.write('  @override\n');
   file.write(
-      '  bool isSupported(Locale locale) => Localized.isSupported(locale);\n');
+    '  bool isSupported(Locale locale) => Localized.isSupported(locale);\n',
+  );
   file.write('\n');
   file.write('  @override\n');
   file.write('  Future<dynamic> load(Locale locale) {\n');
@@ -199,7 +224,8 @@ Future<void> generateFile(String output, List<LocalizationGroup> groups) async {
   file.write('\n');
   file.write('  @override\n');
   file.write(
-      '  bool shouldReload(CustomLocalizationsDelegate old) => false;\n');
+    '  bool shouldReload(CustomLocalizationsDelegate old) => false;\n',
+  );
   file.write('}\n');
 }
 
@@ -239,25 +265,24 @@ class LocalizationEntry {
   final String value;
   final List<String?> params;
 
-  LocalizationEntry(
-    this.key,
-    this.value, [
-    this.params = const <String>[],
-  ]);
+  LocalizationEntry(this.key, this.value, [this.params = const <String>[]]);
 
   factory LocalizationEntry.create(String key, String value) {
     String finalValue = value;
     final RegExp exp = RegExp(r'%[0-9]\$([sdf])');
-    final List<String?> params = exp
-        .allMatches(finalValue)
-        .toList()
-        .map((Match r) => r.group(1))
-        .toList();
+    final List<String?> params =
+        exp
+            .allMatches(finalValue)
+            .toList()
+            .map((Match r) => r.group(1))
+            .toList();
 
     for (int i = 1; i <= params.length; i++) {
       final String? param = params[i - 1];
-      finalValue =
-          finalValue.replaceFirst('%$i\$$param', '\${param$i.toString()}');
+      finalValue = finalValue.replaceFirst(
+        '%$i\$$param',
+        '\${param$i.toString()}',
+      );
     }
 
     return LocalizationEntry(key, finalValue, params);

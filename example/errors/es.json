@@ -1,0 +1,4 @@
+{
+    "network/no-network": "No hay conexión de red",
+    "authenticaiton/invalid-credentials": "Credenciales inválidas"
+}

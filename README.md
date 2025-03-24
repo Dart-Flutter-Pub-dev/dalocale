@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter 
 
 dev_dependencies:
-  dalocale: ^2.5.0
+  dalocale: ^2.6.0
 ```
 
 ## Example
@@ -51,7 +51,7 @@ Parameters inside of localized text must be declared as `%index$format`, where:
 To generate the **Dart** file containing all the localizations, run the following command:
 
 ```bash
-flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER OUTPUT_FILE [DEFAULT_LOCALE] [LIB_FOLDER]
+flutter pub pub run dalocale:dalocale.dart INPUT_FOLDER_1,INPUT_FOLDER_2,... OUTPUT_FILE [DEFAULT_LOCALE] [LIB_FOLDER]
 ```
 
 For example:

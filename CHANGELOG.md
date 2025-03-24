@@ -69,3 +69,7 @@
 ## [2.5.0] - 2024-03-08
 
 * Implement multiline strings
+
+## [2.6.0] - 2025-03-24
+
+* Allow multiple input files
